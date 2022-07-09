@@ -21,9 +21,10 @@ Clone:
 
 2. Install some dependencies:
 
-For Ubuntu:
+For Ubuntu 22.04:
 
-    sudo apt install autogen autoconf libtool curl zip unzip tar ninja-build pkg-config
+    sudo apt install curl zip unzip tar
+    bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
 3. And install vcpkg:
 
@@ -41,7 +42,7 @@ or Unix:
 
 For Windows x64:
 
-    .\vcpkg install libsodium sqlite3 mpir boost-system boost-thread boost-variant boost-interprocess fmt magic-enum --triplet x64-windows
+    .\vcpkg install libsodium sqlite3 boost-system boost-thread boost-variant boost-interprocess boost-multiprecision fmt magic-enum --triplet x64-windows
 
 and install integrate:
 
@@ -49,7 +50,7 @@ and install integrate:
 
 or Unix:
 
-    ./vcpkg install libsodium sqlite3 gmp boost-system boost-thread boost-variant boost-interprocess fmt magic-enum
+    ./vcpkg install libsodium sqlite3 boost-system boost-thread boost-variant boost-interprocess boost-multiprecision fmt magic-enum
 
 If Linux ARM, before:
 
