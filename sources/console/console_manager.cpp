@@ -32,7 +32,7 @@ ConsoleManager::~ConsoleManager() {
 }
 
 void ConsoleManager::commandReceiver(QString command) {
-    command = command.simplified().toLower();
+    command = command.simplified();
     qDebug() << "[Console] Input:" << command;
 
     // TODO: process coin request
@@ -191,13 +191,34 @@ void ConsoleManager::commandReceiver(QString command) {
 
     if (command.left(8) == "dfs add ") {
         auto file = command.mid(8).toStdWString();
-        qInfo() << "Adding file to DFS:" << command.mid(8);
+        std::filesystem::path filepath(file);
+        qInfo() << "Adding file to DFS:" << command.mid(8).data();
 
-        auto result = node->dfs()->addLocalFile(node->accountController()->mainActor(), file, "console",
-                                                DFS::Encryption::Public);
+        auto result = node->dfs()->addLocalFile(node->accountController()->mainActor(), file, filepath.filename().string(),
+                                  DFS::Encryption::Public);
         auto res = QString::fromStdString(result);
         if (res.left(5) == "Error") {
             qDebug() << res;
+        }
+    }
+
+    if (command.left(8) == "dfs get ") {
+        auto list = command.split(" ");
+        if (list.size() < 4) {
+            qInfo() << "List has less 2 parameters";
+        } else {
+            const std::string pathToNewFolder = list[2].toStdString();
+            const std::string pathToDfsFile = list[3].toStdString();
+            if (pathToNewFolder.empty() || pathToDfsFile.empty()) {
+                qDebug() << "One or more parameters is empty. Please check in parameters.";
+                return;
+            }
+
+            if (list.size() == 5) {
+                node->dfs()->exportFile(pathToNewFolder, pathToDfsFile, list[4].toStdString());
+            } else if (list.size() == 4) {
+                node->dfs()->exportFile(pathToNewFolder, pathToDfsFile);
+            }
         }
     }
 
